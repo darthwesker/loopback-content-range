@@ -1,0 +1,25 @@
+{
+  "name": "loopback-content-range",
+  "version": "1.0.0",
+  "description": "Add Content header to all search requests for Loopback 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darthwesker/loopback-content-range.git"
+  },
+  "keywords": [
+    "loopback",
+    "node",
+    "Content-Range",
+    "json-server"
+  ],
+  "author": "Carlos Almeida",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/darthwesker/loopback-content-range/issues"
+  },
+  "homepage": "https://github.com/darthwesker/loopback-content-range#README.md"
+}
