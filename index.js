@@ -56,12 +56,12 @@ module.exports = function(app, options) {
   const pattern = options &&
     Array.isArray(options.pattern) ? options.pattern : ['*.find'];
   for (let i = pattern.length - 1; i >= 0; i--) {
-    remotes.after(pattern[i], applyModelRange);
+    remotes.before(pattern[i], applyModelRange);
   }
 
   const relatedModels = options &&
     options.relatedModels !== undefined ? options.relatedModels : true;
 
   if (relatedModels)
-    remotes.after('*.prototype.*', applyRelationRange);
+    remotes.before('*.prototype.*', applyRelationRange);
 };
