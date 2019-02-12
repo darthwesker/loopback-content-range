@@ -1,3 +1,4 @@
+'use strict';
 module.exports = function(app, options) {
   const remotes = app.remotes();
 
@@ -7,14 +8,24 @@ module.exports = function(app, options) {
       let limit = 50;
       let offset = 0;
 
-      if (ctx.args && ctx.args.filter) {
-        if (ctx.args.filter.where)
-          filter = ctx.args.filter.where;
-        if (ctx.args.filter.limit)
-          limit = ctx.args.filter.limit;
-        if (ctx.args.filter.offset)
-          offset = ctx.args.filter.offset;
-      }
+      if (!ctx.args)
+        ctx.args = {};
+
+      if (!ctx.args.filter)
+        ctx.args.filter = {};
+
+      if (ctx.args.filter.where)
+        filter = ctx.args.filter.where;
+
+      if (ctx.args.filter.limit)
+        limit = ctx.args.filter.limit;
+      else
+        ctx.args.filter.limit = limit;
+
+      if (ctx.args.filter.offset)
+        offset = ctx.args.filter.offset;
+      else
+        ctx.args.filter.offset = offset;
 
       model.count(filter, function(err, count) {
         const last = Math.min(offset + limit, count);

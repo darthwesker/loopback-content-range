@@ -34,6 +34,9 @@ Default value: `[ "*.find" ]`, which auto added to find method of all models.
 
 ### `relatedModels`: Boolean
 
+## Tips
+
+To get all records, use: `{ "limit": 0 }`
 
 ## Credits
 
