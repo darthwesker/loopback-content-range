@@ -34,6 +34,16 @@ Default value: `[ "*.find" ]`, which auto added to find method of all models.
 
 ### `relatedModels`: Boolean
 
+Apply `Content-Range` to all related models.
+
+### `defaultLimit`: Integer
+
+Set the default value when no limit parameter is passed on filter.
+
+### `maxLimit`: Integer
+
+Set the maximum value of the limit paramater on filter.
+
 ## Tips
 
 To get all records, use: `{ "limit": 0 }`
