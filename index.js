@@ -38,15 +38,19 @@ module.exports = function(app, options) {
       else
         ctx.args.filter.offset = offset;
 
-      model.count(filter, function(err, count) {
-        const last = Math.min(offset + limit, count);
-        ctx.res.set('Access-Control-Expose-Headers', 'Content-Range');
-        ctx.res.set(
-          'Content-Range',
-          `${name.toLowerCase()} ${offset}-${last}/${count}`
-        );
+      if (typeof model.count === 'function') {
+        model.count(filter, function(err, count) {
+          const last = Math.min(offset + limit, count);
+          ctx.res.set('Access-Control-Expose-Headers', 'Content-Range');
+          ctx.res.set(
+            'Content-Range',
+            `${name.toLowerCase()} ${offset}-${last}/${count}`
+          );
+          next();
+        });
+      } else {
         next();
-      });
+      }
     }
   };
 
