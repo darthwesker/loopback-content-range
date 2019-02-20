@@ -4,9 +4,10 @@ module.exports = function(app, options) {
 
   const applyRange  = function(model, name, ctx, next) {
     if (!ctx.res._headerSent) {
-      let filter;
-      let limit = 50;
+      const maxLimit = options && options.maxLimit;
+      let limit = options && options.defaultLimit || 50;
       let offset = 0;
+      let filter;
 
       if (!ctx.args)
         ctx.args = {};
@@ -17,25 +18,39 @@ module.exports = function(app, options) {
       if (ctx.args.filter.where)
         filter = ctx.args.filter.where;
 
-      if (ctx.args.filter.limit)
-        limit = ctx.args.filter.limit;
-      else
+      if (
+        ctx.args.filter.limit == null ||
+        ctx.args.filter.limit !== parseInt(ctx.args.filter.limit, 10)
+      ) {
         ctx.args.filter.limit = limit;
+      } else if (maxLimit &&
+        maxLimit > 0 &&
+        (ctx.args.filter.limit > maxLimit || ctx.args.filter.limit == 0)
+      ) {
+        limit = maxLimit;
+        ctx.args.filter.limit = maxLimit;
+      } else {
+        limit = ctx.args.filter.limit;
+      }
 
       if (ctx.args.filter.offset)
         offset = ctx.args.filter.offset;
       else
         ctx.args.filter.offset = offset;
 
-      model.count(filter, function(err, count) {
-        const last = Math.min(offset + limit, count);
-        ctx.res.set('Access-Control-Expose-Headers', 'Content-Range');
-        ctx.res.set(
-          'Content-Range',
-          `${name.toLowerCase()} ${offset}-${last}/${count}`
-        );
+      if (typeof model.count === 'function') {
+        model.count(filter, function(err, count) {
+          const last = Math.min(offset + limit, count);
+          ctx.res.set('Access-Control-Expose-Headers', 'Content-Range');
+          ctx.res.set(
+            'Content-Range',
+            `${name.toLowerCase()} ${offset}-${last}/${count}`
+          );
+          next();
+        });
+      } else {
         next();
-      });
+      }
     }
   };
 
