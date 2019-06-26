@@ -35,6 +35,8 @@ module.exports = function(app, options) {
 
       if (ctx.args.filter.offset)
         offset = ctx.args.filter.offset;
+      else if (ctx.args.filter.skip)
+        offset = ctx.args.filter.skip;
       else
         ctx.args.filter.offset = offset;
 
