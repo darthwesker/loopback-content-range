@@ -5,7 +5,10 @@ module.exports = function(app, options) {
   const applyRange  = function(model, name, ctx, next) {
     if (!ctx.res._headerSent) {
       const maxLimit = options && options.maxLimit;
-      let limit = options && options.defaultLimit || 50;
+      let limit = 50;
+      if (options && options.defaultLimit !== undefined) {
+        limit = options.defaultLimit;
+      }
       let offset = 0;
       let filter;
 
