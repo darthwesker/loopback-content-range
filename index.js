@@ -1,14 +1,12 @@
 'use strict';
+
 module.exports = function(app, options) {
   const remotes = app.remotes();
 
   const applyRange  = function(model, name, ctx, next) {
     if (!ctx.res._headerSent) {
       const maxLimit = options && options.maxLimit;
-      let limit = 50;
-      if (options && options.defaultLimit !== undefined) {
-        limit = options.defaultLimit;
-      }
+      let limit = options && options.defaultLimit || 0;
       let offset = 0;
       let filter;
 
@@ -24,27 +22,24 @@ module.exports = function(app, options) {
       if (
         ctx.args.filter.limit == null ||
         ctx.args.filter.limit !== parseInt(ctx.args.filter.limit, 10)
-      ) {
+      )
         ctx.args.filter.limit = limit;
-      } else if (maxLimit &&
-        maxLimit > 0 &&
-        (ctx.args.filter.limit > maxLimit || ctx.args.filter.limit == 0)
-      ) {
-        limit = maxLimit;
-        ctx.args.filter.limit = maxLimit;
-      } else {
+      else
         limit = ctx.args.filter.limit;
+
+      if (maxLimit && maxLimit > 0 && (limit > maxLimit || limit === 0)) {
+        limit = maxLimit;
+        ctx.args.filter.limit = limit;
       }
 
       if (ctx.args.filter.offset)
         offset = ctx.args.filter.offset;
-      else if (ctx.args.filter.skip)
-        offset = ctx.args.filter.skip;
       else
         ctx.args.filter.offset = offset;
 
       if (typeof model.count === 'function') {
         model.count(filter, function(err, count) {
+          limit = limit === 0 ? count : limit;
           const last = Math.min(offset + limit, count);
           ctx.res.set('Access-Control-Expose-Headers', 'Content-Range');
           ctx.res.set(

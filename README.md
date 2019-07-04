@@ -39,6 +39,7 @@ Apply `Content-Range` to all related models.
 ### `defaultLimit`: Integer
 
 Set the default value when no limit parameter is passed on filter.
+If no defaultLimit value is defined it will assume the maxLimit value.
 
 ### `maxLimit`: Integer
 
@@ -46,7 +47,7 @@ Set the maximum value of the limit paramater on filter.
 
 ## Tips
 
-To get all records, use: `{ "limit": 0 }`
+To fetch all records, do not define any values for defaultLimit and maxLimit.
 
 ## Credits
 
