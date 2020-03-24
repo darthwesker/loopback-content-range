@@ -81,13 +81,19 @@ module.exports = function(app, options) {
 
   const pattern = options &&
     Array.isArray(options.pattern) ? options.pattern : ['*.find'];
+
+  const hooks = ["before", "after"];
+  const {remoteModelRange = "before", remoteRelationRange = "before"} = options;
+  const modelRange = hooks.indexOf(remoteModelRange) !== -1 ? remoteModelRange : "before";
+  const relationRange = hooks.indexOf(remoteRelationRange) !== -1 ? remoteRelationRange : "before";
+
   for (let i = pattern.length - 1; i >= 0; i--) {
-    remotes.before(pattern[i], applyModelRange);
+    remotes[modelRange](pattern[i], applyModelRange);
   }
 
   const relatedModels = options &&
     options.relatedModels !== undefined ? options.relatedModels : true;
 
   if (relatedModels)
-    remotes.before('*.prototype.*', applyRelationRange);
+    remotes[relationRange]('*.prototype.*', applyRelationRange);
 };
