@@ -17,7 +17,9 @@ Modify your server/component-config.json to include this module:
     "pattern": [
       "*.find"
     ],
-    "relatedModels": true
+    "relatedModels": true,
+    "remoteModelRange": "after", // Default "before"
+    "remoteRelationRange": "before" // Default "before"
   },
 }
 ```
@@ -44,6 +46,14 @@ If no defaultLimit value is defined it will assume the maxLimit value.
 ### `maxLimit`: Integer
 
 Set the maximum value of the limit paramater on filter.
+
+### `remoteModelRange`: String
+
+Enables you to execute the function before or after a remote method is called by a client. Default 'before'.
+
+### `remoteRelationRange`: String
+
+Enables you to execute the function before or after a remote method is called by a client. Default 'before'.
 
 ## Tips
 
